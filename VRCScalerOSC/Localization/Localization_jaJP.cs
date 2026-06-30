@@ -1,0 +1,67 @@
+﻿namespace VRCScalerOSC.Localization
+{
+    public class Localization_jaJP : Localization
+    {
+        protected override string Text(Key text)
+        {
+            return text switch
+            {
+                Key.GroupBoxHeight => "身長",
+                Key.LabelHeightRange => "範囲",
+                Key.HeightRangeVRChatAvatar => "Avatarデフォルト (0.2 ~ 5m)",
+                Key.HeightRangeVRChatWorld => "Worldデフォルト (0.1 ~ 100m)",
+                Key.HeightRangeAdvanced => "セーフデフォルト (0.05 ~ 3000m)",
+                Key.HeightRangeLimit => "VRChat制限値 (0.01 ~ 10000m)",
+                Key.HeightRangeUserSettings => "カスタム設定ファイル",
+                Key.HeightRangeSetUpper => "上限を選択値に設定",
+                Key.HeightRangeSetLower => "下限を選択値に設定",
+                Key.ButtonResetHeight => "身長リセット",
+                Key.ButtonResetHeightLite => "リセット",
+                Key.ButtonChangeScale => "スケール変更",
+                Key.ButtonStop => "停止",
+                Key.GroupBoxScalingTime => "変換時間",
+                Key.GroupBoxScalingRate => "変換速度",
+                Key.LabelSec => "秒",
+                Key.LabelRate => "倍/秒",
+                Key.LabelMeters => "m",
+                Key.LabelMultiplier => "倍",
+                Key.CheckBoxAutoAbort => "自動中断",
+                Key.GroupBoxSetting => "ウィンドウ設定",
+                Key.ButtonLanguage => "言語",
+                Key.ButtonFormSize => "サイズ",
+                Key.GroupBoxOSCConfig => "OSC設定",
+                Key.LabelOSCIP => "送信先IP",
+                Key.OSCStop => "停止",
+                Key.OSCStart => "開始",
+                Key.ButtonOSCSetup => "適用",
+                Key.LabelOSCSendPort => "送信port",
+                Key.LabelOSCReceivePort => "受信port",
+                Key.CheckBoxOSCRandomReceiverPort => "受信port自動設定",
+                Key.LabelCEH => "現在の身長",
+                Key.LabelDEH => "デフォルトの身長",
+                Key.LabelSF => "身長倍率",
+                Key.WaitLoading => "(読み込み中)",
+                Key.LabelGetWristInfoFailed => "コントローラー座標取得失敗",
+                Key.LabelAvatarScalingDisabled => "アバタースケール無効",
+                Key.ButtonLite => "ライト",
+                Key.ButtonStd => "戻る",
+                Key.CheckBoxInstant => "即時ズーム",
+                Key.CheckBoxFixedRate => "等速拡縮",
+                Key.CheckBoxIsMultiplier => "m→倍",
+                Key.GroupBoxGesture => "ジェスチャーによる拡縮",
+                Key.ComboBoxGesture0 => "オフにする",
+                Key.ComboBoxGesture1 => "LT + RT",
+                Key.ComboBoxGesture2 => "LG + RG",
+                Key.ComboBoxGesture3 => "LT + RG",
+                Key.ComboBoxGesture4 => "LG + RT",
+                Key.ComboBoxGesture5 => "LT+LG+RT+RG",
+                Key.CheckBoxGestureMuteDoubleClickMode => "Muteダブルタップでジェスチャー設定",
+                Key.CheckBoxWorldScaling => "ワールドスケール",
+                Key.GroupBoxCustom => "ユーザー設定",
+                Key.ButtonCustomImport => "インポート",
+                Key.ButtonCustomExport => "エクスポート",
+                _ => text.ToString(),
+            };
+        }
+    }
+}

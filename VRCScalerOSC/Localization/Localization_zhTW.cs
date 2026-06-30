@@ -1,0 +1,67 @@
+﻿namespace VRCScalerOSC.Localization
+{
+    public class Localization_zhTW : Localization
+    {
+        protected override string Text(Key text)
+        {
+            return text switch
+            {
+                Key.GroupBoxHeight => "角色身高",
+                Key.LabelHeightRange => "範圍",
+                Key.HeightRangeVRChatAvatar => "Avatar預設值 (0.2 ~ 5公尺)",
+                Key.HeightRangeVRChatWorld => "World預設值 (0.1 ~ 100公尺)",
+                Key.HeightRangeAdvanced => "安全預設值 (0.05 ~ 3000公尺)",
+                Key.HeightRangeLimit => "VRChat 限制值 (0.01 ~ 10000公尺)",
+                Key.HeightRangeUserSettings => "使用者設定檔",
+                Key.HeightRangeSetUpper => "將上限設為所選的值",
+                Key.HeightRangeSetLower => "將下限設為所選的值",
+                Key.ButtonResetHeight => "回到預設身高",
+                Key.ButtonResetHeightLite => "預設身高",
+                Key.ButtonChangeScale => "進行縮放",
+                Key.ButtonStop => "停止",
+                Key.GroupBoxScalingTime => "縮放時間",
+                Key.GroupBoxScalingRate => "縮放速率",
+                Key.LabelSec => "秒",
+                Key.LabelRate => "倍/秒",
+                Key.LabelMeters => "公尺",
+                Key.LabelMultiplier => "倍",
+                Key.CheckBoxAutoAbort => "自動中斷",
+                Key.GroupBoxSetting => "視窗設定",
+                Key.ButtonLanguage => "語言",
+                Key.ButtonFormSize => "大小",
+                Key.GroupBoxOSCConfig => "OSC設定",
+                Key.LabelOSCIP => "目標IP",
+                Key.OSCStop => "停止",
+                Key.OSCStart => "啟動",
+                Key.ButtonOSCSetup => "套用",
+                Key.LabelOSCSendPort => "發送port",
+                Key.LabelOSCReceivePort => "接收port",
+                Key.CheckBoxOSCRandomReceiverPort => "自動設定接收port",
+                Key.LabelCEH => "目前身高",
+                Key.LabelDEH => "預設身高",
+                Key.LabelSF => "身高倍數",
+                Key.WaitLoading => "(等待讀取中)",
+                Key.LabelGetWristInfoFailed => "控制器座標取得失敗",
+                Key.LabelAvatarScalingDisabled => "角色縮放已禁用",
+                Key.ButtonLite => "精簡模式",
+                Key.ButtonStd => "返回",
+                Key.CheckBoxInstant => "即時縮放",
+                Key.CheckBoxFixedRate => "定速縮放",
+                Key.CheckBoxIsMultiplier => "公尺→倍",
+                Key.GroupBoxGesture => "手勢縮放",
+                Key.ComboBoxGesture0 => "未啟用",
+                Key.ComboBoxGesture1 => "LT + RT",
+                Key.ComboBoxGesture2 => "LG + RG",
+                Key.ComboBoxGesture3 => "LT + RG",
+                Key.ComboBoxGesture4 => "LG + RT",
+                Key.ComboBoxGesture5 => "LT+LG+RT+RG",
+                Key.CheckBoxGestureMuteDoubleClickMode => "雙擊麥克風鍵切換縮放手勢",
+                Key.CheckBoxWorldScaling => "世界縮放模式",
+                Key.GroupBoxCustom => "使用者設定",
+                Key.ButtonCustomImport => "匯入設定",
+                Key.ButtonCustomExport => "匯出設定",
+                _ => text.ToString(),
+            };
+        }
+    }
+}

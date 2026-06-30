@@ -1,0 +1,67 @@
+﻿namespace VRCScalerOSC.Localization
+{
+    public class Localization_enUS : Localization
+    {
+        protected override string Text(Key text)
+        {
+            return text switch
+            {
+                Key.GroupBoxHeight => "Avatar EyeHeight",
+                Key.LabelHeightRange => "Range",
+                Key.HeightRangeVRChatAvatar => "Avatar default (0.2 ~ 5m)",
+                Key.HeightRangeVRChatWorld => "World default (0.1 ~ 100m)",
+                Key.HeightRangeAdvanced => "Safe default (0.05 ~ 3000m)",
+                Key.HeightRangeLimit => "VRChat limit (0.01 ~ 10000m)",
+                Key.HeightRangeUserSettings => "Custom settings file",
+                Key.HeightRangeSetUpper => "Set max to selected value",
+                Key.HeightRangeSetLower => "Set min to selected value",
+                Key.ButtonResetHeight => "Reset Height",
+                Key.ButtonResetHeightLite => "Reset",
+                Key.ButtonChangeScale => "Scaling Now",
+                Key.ButtonStop => "Stop",
+                Key.GroupBoxScalingTime => "Scaling time",
+                Key.GroupBoxScalingRate => "Scaling rate",
+                Key.LabelSec => "s",
+                Key.LabelRate => "x/s",
+                Key.LabelMeters => "m",
+                Key.LabelMultiplier => "x",
+                Key.CheckBoxAutoAbort => "Auto-abort",
+                Key.GroupBoxSetting => "Form Setting",
+                Key.ButtonLanguage => "Lang.",
+                Key.ButtonFormSize => "Size",
+                Key.GroupBoxOSCConfig => "OSC Config",
+                Key.LabelOSCIP => "IP Address:",
+                Key.OSCStop => "Stop",
+                Key.OSCStart => "Start",
+                Key.ButtonOSCSetup => "Setup",
+                Key.LabelOSCSendPort => "Send port:",
+                Key.LabelOSCReceivePort => "Receive port:",
+                Key.CheckBoxOSCRandomReceiverPort => "Auto-configure receive port",
+                Key.LabelCEH => "Current Height:",
+                Key.LabelDEH => "Default Height:",
+                Key.LabelSF => "ScaleFactor:",
+                Key.WaitLoading => "(loading)",
+                Key.LabelGetWristInfoFailed => "Controller coords failed.",
+                Key.LabelAvatarScalingDisabled => "Avatar Scaling Disabled.",
+                Key.ButtonLite => "Lite mode",
+                Key.ButtonStd => "Back",
+                Key.CheckBoxInstant => "Instant",
+                Key.CheckBoxFixedRate => "Fixed rate",
+                Key.CheckBoxIsMultiplier => "Multiplier",
+                Key.GroupBoxGesture => "Gesture Scaling",
+                Key.ComboBoxGesture0 => "Disable",
+                Key.ComboBoxGesture1 => "LT + RT",
+                Key.ComboBoxGesture2 => "LG + RG",
+                Key.ComboBoxGesture3 => "LT + RG",
+                Key.ComboBoxGesture4 => "LG + RT",
+                Key.ComboBoxGesture5 => "LT+LG+RT+RG",
+                Key.CheckBoxGestureMuteDoubleClickMode => "Double-tap Mute to set gestures",
+                Key.CheckBoxWorldScaling => "World-Scaling",
+                Key.GroupBoxCustom => "Custom Settings",
+                Key.ButtonCustomImport => "Import",
+                Key.ButtonCustomExport => "Export",
+                _ => text.ToString(),
+            };
+        }
+    }
+}

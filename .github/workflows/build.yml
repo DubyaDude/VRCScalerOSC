@@ -1,0 +1,56 @@
+name: Build Verification
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build Windows Desktop
+        run: dotnet build -c Release -f net9.0-windows7.0 VRCScalerOSC_Windows/VRCScalerOSC_Windows.csproj
+
+      - name: Build Console
+        run: dotnet build -c Release VRCScalerOSC_Console/VRCScalerOSC_Console.csproj
+
+      - name: Tests (if available)
+        continue-on-error: true
+        run: dotnet test -c Release --no-build
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore Core library
+        run: dotnet restore VRCScalerOSC/VRCScalerOSC.csproj
+
+      - name: Restore Console
+        run: dotnet restore VRCScalerOSC_Console/VRCScalerOSC_Console.csproj
+
+      - name: Build Console
+        run: dotnet build -c Release VRCScalerOSC_Console/VRCScalerOSC_Console.csproj
+
+      - name: Tests (if available)
+        continue-on-error: true
+        run: dotnet test -c Release --no-build

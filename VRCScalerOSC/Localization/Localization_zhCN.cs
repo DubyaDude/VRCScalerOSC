@@ -1,0 +1,67 @@
+﻿namespace VRCScalerOSC.Localization
+{
+    public class Localization_zhCN : Localization
+    {
+        protected override string Text(Key text)
+        {
+            return text switch
+            {
+                Key.GroupBoxHeight => "模型身高",
+                Key.LabelHeightRange => "范围",
+                Key.HeightRangeVRChatAvatar => "Avatar预设值 (0.2 ~ 5米)",
+                Key.HeightRangeVRChatWorld => "World预设值 (0.1 ~ 100米)",
+                Key.HeightRangeAdvanced => "安全预设值 (0.05 ~ 3000米)",
+                Key.HeightRangeLimit => "VRChat 限制值 (0.01 ~ 10000米)",
+                Key.HeightRangeUserSettings => "使用者设定文档",
+                Key.HeightRangeSetUpper => "将上限设为所选的值",
+                Key.HeightRangeSetLower => "将下限设为所选的值",
+                Key.ButtonResetHeight => "回到预设身高",
+                Key.ButtonResetHeightLite => "预设身高",
+                Key.ButtonChangeScale => "进行缩放",
+                Key.ButtonStop => "停止",
+                Key.GroupBoxScalingTime => "缩放时间",
+                Key.GroupBoxScalingRate => "缩放速率",
+                Key.LabelSec => "秒",
+                Key.LabelRate => "倍/秒",
+                Key.LabelMeters => "米",
+                Key.LabelMultiplier => "倍",
+                Key.CheckBoxAutoAbort => "自动中断",
+                Key.GroupBoxSetting => "视窗设定",
+                Key.ButtonLanguage => "语言",
+                Key.ButtonFormSize => "大小",
+                Key.GroupBoxOSCConfig => "OSC设定",
+                Key.LabelOSCIP => "目标IP",
+                Key.OSCStop => "停止",
+                Key.OSCStart => "启动",
+                Key.ButtonOSCSetup => "套用",
+                Key.LabelOSCSendPort => "发送port",
+                Key.LabelOSCReceivePort => "接收port",
+                Key.CheckBoxOSCRandomReceiverPort => "自动设定接收port",
+                Key.LabelCEH => "目前身高",
+                Key.LabelDEH => "预设身高",
+                Key.LabelSF => "身高倍数",
+                Key.WaitLoading => "(等待读取中)",
+                Key.LabelGetWristInfoFailed => "控制器座标取得失败",
+                Key.LabelAvatarScalingDisabled => "模型縮放已禁用",
+                Key.ButtonLite => "精简模式",
+                Key.ButtonStd => "返回",
+                Key.CheckBoxInstant => "即时缩放",
+                Key.CheckBoxFixedRate => "定速缩放",
+                Key.CheckBoxIsMultiplier => "米→倍数",
+                Key.GroupBoxGesture => "手势缩放",
+                Key.ComboBoxGesture0 => "禁用",
+                Key.ComboBoxGesture1 => "LT + RT",
+                Key.ComboBoxGesture2 => "LG + RG",
+                Key.ComboBoxGesture3 => "LT + RG",
+                Key.ComboBoxGesture4 => "LG + RT",
+                Key.ComboBoxGesture5 => "LT+LG+RT+RG",
+                Key.CheckBoxGestureMuteDoubleClickMode => "双击麦克风键切换缩放手势",
+                Key.CheckBoxWorldScaling => "世界缩放模式",
+                Key.GroupBoxCustom => "用户配置",
+                Key.ButtonCustomImport => "导入配置",
+                Key.ButtonCustomExport => "导出配置",
+                _ => text.ToString(),
+            };
+        }
+    }
+}

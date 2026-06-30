@@ -1,0 +1,67 @@
+﻿namespace VRCScalerOSC.Localization
+{
+    public class Localization_koKR : Localization
+    {
+        protected override string Text(Key text)
+        {
+            return text switch
+            {
+                Key.GroupBoxHeight => "아바타 크기",
+                Key.LabelHeightRange => "범위",
+                Key.HeightRangeVRChatAvatar => "Avatar 기본값 (0.2 ~ 5m)",
+                Key.HeightRangeVRChatWorld => "World 기본값 (0.1 ~ 100m)",
+                Key.HeightRangeAdvanced => "안전 기본값 (0.05 ~ 3000m)",
+                Key.HeightRangeLimit => "VRChat 제한값 (0.01 ~ 10000m)",
+                Key.HeightRangeUserSettings => "사용자 설정 파일",
+                Key.HeightRangeSetUpper => "상한을 선택값으로 설정",
+                Key.HeightRangeSetLower => "하한을 선택값으로 설정",
+                Key.ButtonResetHeight => "기본 키 복원",
+                Key.ButtonResetHeightLite => "기본 키",
+                Key.ButtonChangeScale => "스케일 변경",
+                Key.ButtonStop => "정지",
+                Key.GroupBoxScalingTime => "전환 시간",
+                Key.GroupBoxScalingRate => "전환 속도",
+                Key.LabelSec => "초",
+                Key.LabelRate => "배/초",
+                Key.LabelMeters => "m",
+                Key.LabelMultiplier => "배",
+                Key.CheckBoxAutoAbort => "자동 중단",
+                Key.GroupBoxSetting => "창 설정",
+                Key.ButtonLanguage => "언어",
+                Key.ButtonFormSize => "크기",
+                Key.GroupBoxOSCConfig => "OSC 설정",
+                Key.LabelOSCIP => "대상 IP",
+                Key.OSCStop => "정지",
+                Key.OSCStart => "시작",
+                Key.ButtonOSCSetup => "적용",
+                Key.LabelOSCSendPort => "송신 port",
+                Key.LabelOSCReceivePort => "수신 port",
+                Key.CheckBoxOSCRandomReceiverPort => "수신 port 자동 설정",
+                Key.LabelCEH => "현재 키",
+                Key.LabelDEH => "기본 키",
+                Key.LabelSF => "키 배율",
+                Key.WaitLoading => "(불러오는 중)",
+                Key.LabelGetWristInfoFailed => "컨트롤러 좌표 획득 실패.",
+                Key.LabelAvatarScalingDisabled => "아바타 크기 변경 비활성화.",
+                Key.ButtonLite => "간편 모드",
+                Key.ButtonStd => "뒤로가기",
+                Key.CheckBoxInstant => "즉시 줌",
+                Key.CheckBoxFixedRate => "정속 스케일",
+                Key.CheckBoxIsMultiplier => "m→배수",
+                Key.GroupBoxGesture => "제스처 확대 축소",
+                Key.ComboBoxGesture0 => "끄기",
+                Key.ComboBoxGesture1 => "LT + RT",
+                Key.ComboBoxGesture2 => "LG + RG",
+                Key.ComboBoxGesture3 => "LT + RG",
+                Key.ComboBoxGesture4 => "LG + RT",
+                Key.ComboBoxGesture5 => "LT+LG+RT+RG",
+                Key.CheckBoxGestureMuteDoubleClickMode => "Mute 더블탭으로 제스처 설정",
+                Key.CheckBoxWorldScaling => "월드 스케일링",
+                Key.GroupBoxCustom => "사용자 설정",
+                Key.ButtonCustomImport => "가져오기",
+                Key.ButtonCustomExport => "내보내기",
+                _ => text.ToString(),
+            };
+        }
+    }
+}

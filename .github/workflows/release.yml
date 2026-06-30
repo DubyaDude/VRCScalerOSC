@@ -1,0 +1,179 @@
+name: Automated Release Build
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Publish Windows Desktop (win-x64 - Single File R2R)
+        run: dotnet publish -c Release -f net9.0-windows7.0 -r win-x64 --self-contained -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Windows/VRCScalerOSC_Windows.csproj -o ./publish/windows-desktop
+
+      - name: Publish Windows Console (win-x64 - Single File R2R with Trimming)
+        run: dotnet publish -c Release -f net9.0 -r win-x64 --self-contained -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/win-x64
+
+      - name: Create packages directory
+        run: mkdir packages
+
+      - name: Package Windows Desktop
+        shell: pwsh
+        run: |
+          $desktopPath = "publish/windows-desktop"
+          if (Test-Path $desktopPath) {
+            echo "Windows Desktop contents:"
+            Get-ChildItem "$desktopPath" | ForEach-Object {
+              Write-Host "$($_.Name) - $($_.Length) bytes"
+            }
+            Compress-Archive -Path "$desktopPath/*" -DestinationPath "packages/VRCScalerOSC-windows-desktop-x64.zip" -Force
+            Write-Host "Windows Desktop package created successfully"
+          } else {
+            Write-Error "Desktop path not found: $desktopPath"
+            exit 1
+          }
+
+      - name: Package Windows Console
+        shell: pwsh
+        run: |
+          $consolePath = "publish/win-x64"
+          if (Test-Path $consolePath) {
+            echo "Windows Console contents:"
+            Get-ChildItem "$consolePath" | ForEach-Object {
+              Write-Host "$($_.Name) - $($_.Length) bytes"
+            }
+            Compress-Archive -Path "$consolePath/*" -DestinationPath "packages/VRCScalerOSC-windows-console-x64.zip" -Force
+            Write-Host "Windows Console package created successfully"
+          } else {
+            Write-Error "Console path not found: $consolePath"
+            exit 1
+          }
+
+      - name: Verify packages
+        shell: pwsh
+        run: |
+          $packages = Get-ChildItem packages/ -Filter "*.zip"
+          Write-Host "Created packages:"
+          $packages | ForEach-Object { Write-Host "  - $($_.Name) ($($_.Length) bytes)" }
+          if ($packages.Count -eq 0) {
+            Write-Error "No packages were created!"
+            exit 1
+          }
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifacts
+          path: packages/
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore Core library
+        run: dotnet restore VRCScalerOSC/VRCScalerOSC.csproj
+
+      - name: Restore Console
+        run: dotnet restore VRCScalerOSC_Console/VRCScalerOSC_Console.csproj
+
+      - name: Publish Linux Console (linux-x64 - Single File R2R with Trimming)
+        run: dotnet publish -c Release -f net9.0 -r linux-x64 --self-contained -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/linux-x64
+
+      - name: Create packages directory
+        run: mkdir -p packages
+
+      - name: Package Linux Console
+        run: |
+          if [ -d "publish/linux-x64" ]; then
+            echo "Linux Console contents:"
+            ls -lh publish/linux-x64/
+            cd publish/linux-x64
+            tar -czf ../../packages/VRCScalerOSC-linux-console-x64.tar.gz *
+            cd ../../
+            echo "Linux Console package created successfully"
+          else
+            echo "Error: publish/linux-x64 directory not found"
+            exit 1
+          fi
+
+      - name: Verify packages
+        run: |
+          echo "Created packages:"
+          ls -lh packages/
+          if [ ! -f "packages/VRCScalerOSC-linux-console-x64.tar.gz" ]; then
+            echo "Error: Linux package not created!"
+            exit 1
+          fi
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-artifacts
+          path: packages/
+
+  create-release:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-artifacts
+          path: artifacts/windows
+
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-artifacts
+          path: artifacts/linux
+
+      - name: Extract version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          files: |
+            artifacts/windows/VRCScalerOSC-windows-desktop-x64.zip
+            artifacts/windows/VRCScalerOSC-windows-console-x64.zip
+            artifacts/linux/VRCScalerOSC-linux-console-x64.tar.gz
+          draft: false
+          prerelease: false
+          body: |
+            VRCScalerOSC ${{ steps.get_version.outputs.VERSION }}
+            
+            Downloads:
+            - Windows Desktop (x64): VRCScalerOSC-windows-desktop-x64.zip
+            - Windows Console (x64): VRCScalerOSC-windows-console-x64.zip
+            - Linux Console (x64): VRCScalerOSC-linux-console-x64.tar.gz
+            
+            See commit history for detailed changes.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
