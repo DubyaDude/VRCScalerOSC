@@ -6,7 +6,7 @@
         {
             return text switch
             {
-                Key.GroupBoxHeight => "身長",
+                Key.GroupBoxHeight => "アバターの身長",
                 Key.LabelHeightRange => "範囲",
                 Key.HeightRangeVRChatAvatar => "Avatarデフォルト (0.2 ~ 5m)",
                 Key.HeightRangeVRChatWorld => "Worldデフォルト (0.1 ~ 100m)",
