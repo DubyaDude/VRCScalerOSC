@@ -457,6 +457,10 @@ namespace VRCScalerOSC_Windows
             if (comboBoxGesture.Items.Count > 3) comboBoxGesture.Items[3] = loc.ComboBoxGesture3;
             if (comboBoxGesture.Items.Count > 4) comboBoxGesture.Items[4] = loc.ComboBoxGesture4;
             if (comboBoxGesture.Items.Count > 5) comboBoxGesture.Items[5] = loc.ComboBoxGesture5;
+            if (comboBoxGesture.Items.Count > 6) comboBoxGesture.Items[6] = loc.ComboBoxGesture6;
+            if (comboBoxGesture.Items.Count > 7) comboBoxGesture.Items[7] = loc.ComboBoxGesture7;
+            if (comboBoxGesture.Items.Count > 8) comboBoxGesture.Items[8] = loc.ComboBoxGesture8;
+            if (comboBoxGesture.Items.Count > 9) comboBoxGesture.Items[9] = loc.ComboBoxGesture9;
             checkBoxGestureMuteDoubleClickMode.Text = loc.CheckBoxGestureMuteDoubleClickMode;
             checkBoxWorldScaling.Text = loc.CheckBoxWorldScaling;
             groupBoxCustom.Text = loc.GroupBoxCustom;

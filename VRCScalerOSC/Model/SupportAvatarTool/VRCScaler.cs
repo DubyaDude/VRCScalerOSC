@@ -554,6 +554,38 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                                 }
                                 controller.GestureScaling(float.NaN);
                                 break;
+                            case 6: //Left Trigger+Grip & Right Trigger
+                                if (viewModel.LeftHandTrigger && viewModel.LeftHandGrip && viewModel.RightHandTrigger)
+                                {
+                                    controller.GestureScaling(data.ValueF.Value);
+                                    break;
+                                }
+                                controller.GestureScaling(float.NaN);
+                                break;
+                            case 7: //Left Trigger+Grip & Right Trigger
+                                if (viewModel.LeftHandTrigger && viewModel.LeftHandGrip && viewModel.RightHandGrip)
+                                {
+                                    controller.GestureScaling(data.ValueF.Value);
+                                    break;
+                                }
+                                controller.GestureScaling(float.NaN);
+                                break;
+                            case 8: //Left Trigger & Right Trigger+Grip
+                                if (viewModel.LeftHandTrigger && viewModel.RightHandTrigger && viewModel.RightHandGrip)
+                                {
+                                    controller.GestureScaling(data.ValueF.Value);
+                                    break;
+                                }
+                                controller.GestureScaling(float.NaN);
+                                break;
+                            case 9: //Left Grip & Right Trigger+Grip
+                                if ( viewModel.LeftHandGrip && viewModel.RightHandTrigger && viewModel.RightHandGrip)
+                                {
+                                    controller.GestureScaling(data.ValueF.Value);
+                                    break;
+                                }
+                                controller.GestureScaling(float.NaN);
+                                break;
                             default: //disable
                                 controller.GestureScaling(float.NaN);
                                 break;
@@ -889,6 +921,22 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
             {
                 return 5;//Left Trigger+Grip & Right Trigger+Grip
             }
+            if (viewModel.LeftHandTrigger && viewModel.LeftHandGrip && viewModel.RightHandTrigger)
+            {
+                return 6;//Left Trigger+Grip & Right Trigger
+            }
+            if (viewModel.LeftHandTrigger && viewModel.LeftHandGrip && viewModel.RightHandGrip)
+            {
+                return 7;//Left Trigger+Grip & Right Grip
+            }
+            if (viewModel.LeftHandTrigger && viewModel.RightHandTrigger && viewModel.RightHandGrip)
+            {
+                return 8;//Left Trigger & Right Trigger+Grip
+            }
+            if (viewModel.LeftHandGrip && viewModel.RightHandTrigger && viewModel.RightHandGrip)
+            {
+                return 9;//Left Grip & Right Trigger+Grip
+            }
             if (viewModel.LeftHandTrigger && viewModel.RightHandTrigger)
             {
                 return 1;//Left Trigger & Right Trigger
@@ -904,7 +952,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
             if (viewModel.LeftHandGrip && viewModel.RightHandTrigger)
             {
                 return 4;//Left Grip & Right Trigger
-            }
+            }            
             return 0;
         }
     }

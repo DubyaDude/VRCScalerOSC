@@ -62,6 +62,10 @@
             ComboBoxGesture3,
             ComboBoxGesture4,
             ComboBoxGesture5,
+            ComboBoxGesture6,
+            ComboBoxGesture7,
+            ComboBoxGesture8,
+            ComboBoxGesture9,
             CheckBoxGestureMuteDoubleClickMode,
             CheckBoxWorldScaling,
             GroupBoxCustom,
@@ -117,6 +121,10 @@
         public string ComboBoxGesture3 { get; set; } = "comboBoxGesture3";
         public string ComboBoxGesture4 { get; set; } = "comboBoxGesture4";
         public string ComboBoxGesture5 { get; set; } = "comboBoxGesture5";
+        public string ComboBoxGesture6 { get; set; } = "comboBoxGesture6";
+        public string ComboBoxGesture7 { get; set; } = "comboBoxGesture7";
+        public string ComboBoxGesture8 { get; set; } = "comboBoxGesture8";
+        public string ComboBoxGesture9 { get; set; } = "comboBoxGesture9";
         public string CheckBoxGestureMuteDoubleClickMode { get; set; } = "checkBoxGestureMuteDoubleClickMode";
         public string CheckBoxWorldScaling { get; set; } = "checkBoxWorldScaling";
         public string GroupBoxCustom { get; set; } = "groupBoxCustom";

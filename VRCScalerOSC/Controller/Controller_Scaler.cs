@@ -372,14 +372,14 @@ namespace VRCScalerOSC.Controller
         }
         public void SetGestureScaling(int mode)
         {
-            if (mode < 0 || mode > 5)
+            if (mode < 0 || mode > 9)
             {
                 return;
             }
             if (ViewModelScaler.GestureMode != mode)
             {
                 ViewModelScaler.GestureMode = mode;
-            }
+            }            
             _serviceOSCProtocols?.SendOscMessage(new OSCData(ScalerOSCPathPrefix + "/Gesture/Mode", "i", mode));
             if (mode != 0)
             {

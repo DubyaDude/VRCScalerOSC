@@ -107,8 +107,8 @@ namespace VRCScalerOSC.View
                     screenBuilder.Append($"s[number][m][x][p] Smoothly scale height to [number] e.g. s100m  h10x  h+50p  ".PadRight(windowWidth)[..windowWidth] + "\n");
                     screenBuilder.Append($"                       [m] unit is meter, [x] unit is multiplier,             ".PadRight(windowWidth)[..windowWidth] + "\n");
                     screenBuilder.Append($"                       [p] +/- percentage of height                           ".PadRight(windowWidth)[..windowWidth] + "\n");
-                    screenBuilder.Append($"g[number]          Scaling Gesture, [number] in [0] to [5]     0: Disable     ".PadRight(windowWidth)[..windowWidth] + "\n");
-                    screenBuilder.Append($"                       1: LT+RT  2: LG+RG  3: LT+RG  4: LG+RT  5: LT+RT+LG+RG ".PadRight(windowWidth)[..windowWidth] + "\n");
+                    screenBuilder.Append($"g[number]          Scaling Gesture, [number] in [0] to [9] 0: Disable 1:T+T   ".PadRight(windowWidth)[..windowWidth] + "\n");
+                    screenBuilder.Append($"                       2:G+G 3:T+G 4:G+T 5:TG+TG 6:TG+T 7:TG+G 8:T+TG 9:G+TG  ".PadRight(windowWidth)[..windowWidth] + "\n");
                     screenBuilder.Append($"ws                 Switch world scaling Enabled / Disabled                    ".PadRight(windowWidth)[..windowWidth] + "\n");
                     screenBuilder.Append($"dm                 Switch Double-tap Mute to set gestures Enabled / Disabled  ".PadRight(windowWidth)[..windowWidth] + "\n");
                     screenBuilder.Append($"Press Enter to send command                                                   ".PadRight(windowWidth)[..windowWidth] + "\n");
@@ -419,7 +419,11 @@ namespace VRCScalerOSC.View
                 2 => "LG+RG",
                 3 => "LT+RG",
                 4 => "LG+RT",
-                5 => "LT+RT+LG+RG",
+                5 => "LT+LG+RT+RG",
+                6 => "LT+LG + RT",
+                7 => "LT+LG + RG",
+                8 => "LT + RT+RG",
+                9 => "LG + RT+RG",
                 _ => "",
             };
         }

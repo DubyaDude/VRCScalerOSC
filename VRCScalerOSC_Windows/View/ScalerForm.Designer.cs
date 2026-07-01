@@ -840,7 +840,7 @@
             // 
             comboBoxGesture.Dock = DockStyle.Fill;
             comboBoxGesture.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxGesture.Items.AddRange(new object[] { "Disable", "LT + RT", "LG + RG", "LT + RG", "LG + RT", "LT+RT+LG+RG" });
+            comboBoxGesture.Items.AddRange(new object[] { "Disable", "LT + RT", "LG + RG", "LT + RG", "LG + RT", "LT+LG + RT+RG", "LT+LG + RT", "LT+LG + RG", "LT + RT+RG", "LG + RT+RG" });
             comboBoxGesture.Location = new Point(0, 0);
             comboBoxGesture.Margin = new Padding(0, 0, 3, 0);
             comboBoxGesture.Name = "comboBoxGesture";
