@@ -379,8 +379,9 @@ namespace VRCScalerOSC.Controller
             if (ViewModelScaler.GestureMode != mode)
             {
                 ViewModelScaler.GestureMode = mode;
-            }            
-            _serviceOSCProtocols?.SendOscMessage(new OSCData(ScalerOSCPathPrefix + "/Gesture/Mode", "i", mode));
+                _serviceOSCProtocols?.SendOscMessage(new OSCData(ScalerOSCPathPrefix + "/Gesture/Mode", "i", mode));
+            }
+            
             if (mode != 0)
             {
                 _serviceOSCProtocols?.IgnoreAddrListRemove("#bundle");

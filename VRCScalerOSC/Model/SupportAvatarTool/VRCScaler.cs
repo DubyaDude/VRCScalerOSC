@@ -919,40 +919,40 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
         {
             if (viewModel.LeftHandTrigger && viewModel.LeftHandGrip && viewModel.RightHandTrigger && viewModel.RightHandGrip)
             {
-                return 5;//Left Trigger+Grip & Right Trigger+Grip
+                return viewModel.GestureMode == 5 ? 0 : 5;//Left Trigger+Grip & Right Trigger+Grip
             }
             if (viewModel.LeftHandTrigger && viewModel.LeftHandGrip && viewModel.RightHandTrigger)
             {
-                return 6;//Left Trigger+Grip & Right Trigger
+                return viewModel.GestureMode == 6 ? 0 : 6;//Left Trigger+Grip & Right Trigger
             }
             if (viewModel.LeftHandTrigger && viewModel.LeftHandGrip && viewModel.RightHandGrip)
             {
-                return 7;//Left Trigger+Grip & Right Grip
+                return viewModel.GestureMode == 7 ? 0 : 7;//Left Trigger+Grip & Right Grip
             }
             if (viewModel.LeftHandTrigger && viewModel.RightHandTrigger && viewModel.RightHandGrip)
             {
-                return 8;//Left Trigger & Right Trigger+Grip
+                return viewModel.GestureMode == 8 ? 0 : 8;//Left Trigger & Right Trigger+Grip
             }
             if (viewModel.LeftHandGrip && viewModel.RightHandTrigger && viewModel.RightHandGrip)
             {
-                return 9;//Left Grip & Right Trigger+Grip
+                return viewModel.GestureMode == 9 ? 0 : 9;//Left Grip & Right Trigger+Grip
             }
             if (viewModel.LeftHandTrigger && viewModel.RightHandTrigger)
             {
-                return 1;//Left Trigger & Right Trigger
+                return viewModel.GestureMode == 1 ? 0 : 1;//Left Trigger & Right Trigger
             }
             if (viewModel.LeftHandGrip && viewModel.RightHandGrip)
             {
-                return 2;//Left Grip & Right Grip
+                return viewModel.GestureMode == 2 ? 0 : 2;//Left Grip & Right Grip
             }
             if (viewModel.LeftHandTrigger && viewModel.RightHandGrip)
             {
-                return 3;//Left Trigger & Right Grip
+                return viewModel.GestureMode == 3 ? 0 : 3;//Left Trigger & Right Grip
             }
             if (viewModel.LeftHandGrip && viewModel.RightHandTrigger)
             {
-                return 4;//Left Grip & Right Trigger
-            }            
+                return viewModel.GestureMode == 4 ? 0 : 4;//Left Grip & Right Trigger
+            }
             return 0;
         }
     }
