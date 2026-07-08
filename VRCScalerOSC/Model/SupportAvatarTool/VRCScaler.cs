@@ -9,6 +9,8 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
         private bool _muteState;
         private bool _earmuffsState;
         private bool _waitMtueDoubleClick;
+        private float _prevMoveHorizontalValue;
+        private float _prevMoveVerticalValue;
         private System.Threading.Timer? _waitMtueDoubleClickTimer;
         private System.Threading.Timer? _setScaleGestureDelay;
         private readonly Dictionary<int, float> _templateHeight = [];
@@ -97,6 +99,55 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                             viewModel.RightHandGrip = true;
                             break;
                     }
+                }
+            });
+
+            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/MovingPuppetOn", (isInitialized, service, data) =>
+            {
+                if (isInitialized && data.ValueB.HasValue && !data.ValueB.Value)
+                {
+                    service?.SendOscMessage(new OSCData("/input/Horizontal", "f", 0f));
+                    service?.SendOscMessage(new OSCData("/input/Vertical", "f", 0f));
+                }
+            });
+            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/Horizontal", (isInitialized, service, data) =>
+            {
+                float speed = 0;
+                if (isInitialized && data.ValueF.HasValue && MathF.Abs(data.ValueF.Value) > 0.3f)
+                {
+                    speed = MathF.Round(data.ValueF.Value,1);
+                    if (_prevMoveHorizontalValue != speed)
+                    {
+                        _prevMoveHorizontalValue = speed;
+                        speed *= (viewModel.AvatarScaleFactor > 1f ? 1f : viewModel.AvatarScaleFactor);
+                        speed = MathF.Abs(speed) < 0.11f ? MathF.Sign(data.ValueF.Value) * 0.11f : speed;
+                        service?.SendOscMessage(new OSCData("/input/Horizontal", "f", speed));
+                    }
+                }
+                else if(_prevMoveHorizontalValue != 0f)
+                {
+                    _prevMoveHorizontalValue = 0f;
+                    service?.SendOscMessage(new OSCData("/input/Horizontal", "f", 0f));
+                }
+            });
+            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/Vertical", (isInitialized, service, data) => 
+            {
+                float speed = 0;
+                if (isInitialized && data.ValueF.HasValue && MathF.Abs(data.ValueF.Value) > 0.3f)
+                {
+                    speed = MathF.Round(data.ValueF.Value, 1);
+                    if (_prevMoveVerticalValue != speed)
+                    {
+                        _prevMoveVerticalValue = speed;
+                        speed *= (viewModel.AvatarScaleFactor > 1f ? 1f : viewModel.AvatarScaleFactor);
+                        speed = MathF.Abs(speed) < 0.11f ? MathF.Sign(data.ValueF.Value) * 0.11f : speed;
+                        service?.SendOscMessage(new OSCData("/input/Vertical", "f", speed));
+                    }
+                }
+                else if(_prevMoveVerticalValue != 0f)
+                {
+                    _prevMoveVerticalValue = 0f;
+                    service?.SendOscMessage(new OSCData("/input/Vertical", "f", 0f));
                 }
             });
             functions.TryAdd($"{controller.ScalerOSCPathPrefix}/ScaleNow", (isInitialized, service, data) =>
