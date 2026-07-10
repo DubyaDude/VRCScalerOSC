@@ -122,12 +122,21 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                         speed *= (viewModel.AvatarScaleFactor > 1f ? 1f : viewModel.AvatarScaleFactor);
                         speed = MathF.Abs(speed) < 0.11f ? MathF.Sign(data.ValueF.Value) * 0.11f : speed;
                         service?.SendOscMessage(new OSCData("/input/Horizontal", "f", speed));
+                        if (MathF.Abs(data.ValueF.Value) > 0.95f)
+                        {
+                            service?.SendOscMessage(OSCData.GetTrueOSCData("/input/Run", "T"));
+                        }
+                        else
+                        {
+                            service?.SendOscMessage(OSCData.GetFalseOSCData("/input/Run", "F"));
+                        }
                     }
                 }
                 else if(_prevMoveHorizontalValue != 0f)
                 {
                     _prevMoveHorizontalValue = 0f;
                     service?.SendOscMessage(new OSCData("/input/Horizontal", "f", 0f));
+                    service?.SendOscMessage(OSCData.GetFalseOSCData("/input/Run", "F"));
                 }
             });
             functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/Vertical", (isInitialized, service, data) => 
@@ -142,12 +151,21 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                         speed *= (viewModel.AvatarScaleFactor > 1f ? 1f : viewModel.AvatarScaleFactor);
                         speed = MathF.Abs(speed) < 0.11f ? MathF.Sign(data.ValueF.Value) * 0.11f : speed;
                         service?.SendOscMessage(new OSCData("/input/Vertical", "f", speed));
+                        if (MathF.Abs(data.ValueF.Value) > 0.95f)
+                        {
+                            service?.SendOscMessage(OSCData.GetTrueOSCData("/input/Run", "T"));
+                        }
+                        else
+                        {
+                            service?.SendOscMessage(OSCData.GetFalseOSCData("/input/Run", "F"));
+                        }
                     }
                 }
                 else if(_prevMoveVerticalValue != 0f)
                 {
                     _prevMoveVerticalValue = 0f;
                     service?.SendOscMessage(new OSCData("/input/Vertical", "f", 0f));
+                    service?.SendOscMessage(OSCData.GetFalseOSCData("/input/Run", "F"));
                 }
             });
             functions.TryAdd($"{controller.ScalerOSCPathPrefix}/ScaleNow", (isInitialized, service, data) =>
