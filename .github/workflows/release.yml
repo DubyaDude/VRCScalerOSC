@@ -24,41 +24,92 @@ jobs:
         run: dotnet restore
 
       - name: Publish Windows Desktop (win-x64 - Single File R2R)
-        run: dotnet publish -c Release -f net9.0-windows7.0 -r win-x64 --self-contained -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Windows/VRCScalerOSC_Windows.csproj -o ./publish/windows-desktop
+        run: dotnet publish -c Release -f net9.0-windows7.0 -r win-x64 --self-contained -p:PublishSingleFile=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Windows/VRCScalerOSC_Windows.csproj -o ./publish/windows-desktop
 
       - name: Publish Windows Console (win-x64 - Single File R2R with Trimming)
-        run: dotnet publish -c Release -f net9.0 -r win-x64 --self-contained -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/win-x64
+        run: dotnet publish -c Release -f net9.0-r win-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/win-x64
 
       - name: Create packages directory
         run: mkdir packages
 
-      - name: Package Windows Desktop
+      - name: Install WiX Toolset and Build MSI with EULA
+        shell: pwsh
+        run: |
+          # 1. Install WiX Toolset core tools and required extensions
+          dotnet tool install --global wix
+          wix extension add WixToolset.UI.wixext
+          wix extension add WixToolset.Util.wixext
+
+          # 2. Check if the customized EULA path exists, create fallback folder/file if missing
+          $licenseFolder = "Docs"
+          $licensePath = "Docs/EULA for msi.rtf"
+          
+          if (-not (Test-Path $licenseFolder)) {
+            New-Item -ItemType Directory -Path $licenseFolder
+          }
+          
+          if (-not (Test-Path $licensePath)) {
+            Write-Host "Warning: $licensePath not found. Generating a fallback placeholder."
+            "VRCScalerOSC End-User License Agreement" | Set-Content -Path $licensePath
+          }
+
+          # 3. Dynamically generate WiX source code (product.wxs) with double-quoted specific path
+          $wxsContent = @"
+          <Wix xmlns="http://wixtoolset.org" xmlns:ui="http://wixtoolset.org/ui">
+            <Package Name="VRCScalerOSC" Manufacturer="VRCScalerOSC Team" Version="1.0.0" UpgradeCode="db7bc624-9b8e-4a6c-9a1d-2394fd5e2a22" Language="1028" Scope="perMachine">
+              <MajorUpgrade DowngradeErrorMessage="A newer version of VRCScalerOSC is already installed." />
+              <MediaTemplate EmbedCab="yes" />
+
+              <StandardDirectory Id="ProgramFiles64Folder">
+                <Directory Id="INSTALLFOLDER" Name="VRCScalerOSC" />
+              </StandardDirectory>
+
+              <StandardDirectory Id="DesktopFolder" />
+              <StandardDirectory Id="ProgramMenuFolder" />
+
+              <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+                <Component Id="MainExecutable" Guid="a5b5c5d5-e5f5-4a5b-bcde-1234567890ab">
+                  <File Id="VRCScalerOSC_EXE" Source="publish\windows-desktop\VRCScalerOSC_Windows.exe" KeyPath="yes">
+                    <Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="VRCScalerOSC" WorkingDirectory="INSTALLFOLDER" Advertise="yes" />
+                    <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="VRCScalerOSC" WorkingDirectory="INSTALLFOLDER" Advertise="yes" />
+                  </File>
+                </Component>
+              </ComponentGroup>
+
+              <Feature Id="ProductFeature" Title="VRCScalerOSC" Level="1">
+                <ComponentGroupRef Id="ProductComponents" />
+              </Feature>
+
+              <WixVariable Id="WixUILicenseRtf" Value="Docs\EULA for msi.rtf" />
+              <ui:WixUI Id="WixUI_Minimal" />
+            </Package>
+          </Wix>
+          "@
+          Set-Content -Path "product.wxs" -Value $wxsContent
+
+          # 4. Compile and link everything into the final msi package
+          wix build product.wxs -o "packages/VRCScalerOSC-windows-desktop-x64.msi"
+          Write-Host "MSI Installer with custom EULA path created successfully"
+
+      - name: Package Windows Desktop (Keep Zip & Extract EXE)
         shell: pwsh
         run: |
           $desktopPath = "publish/windows-desktop"
           if (Test-Path $desktopPath) {
-            echo "Windows Desktop contents:"
-            Get-ChildItem "$desktopPath" | ForEach-Object {
-              Write-Host "$($_.Name) - $($_.Length) bytes"
-            }
+            Copy-Item "$desktopPath/VRCScalerOSC_Windows.exe" -Destination "packages/VRCScalerOSC-windows-desktop-x64.exe" -Force
             Compress-Archive -Path "$desktopPath/*" -DestinationPath "packages/VRCScalerOSC-windows-desktop-x64.zip" -Force
-            Write-Host "Windows Desktop package created successfully"
           } else {
             Write-Error "Desktop path not found: $desktopPath"
             exit 1
           }
 
-      - name: Package Windows Console
+      - name: Package Windows Console (Keep Zip & Extract EXE)
         shell: pwsh
         run: |
           $consolePath = "publish/win-x64"
           if (Test-Path $consolePath) {
-            echo "Windows Console contents:"
-            Get-ChildItem "$consolePath" | ForEach-Object {
-              Write-Host "$($_.Name) - $($_.Length) bytes"
-            }
+            Copy-Item "$consolePath/VRCScalerOSC_Console.exe" -Destination "packages/VRCScalerOSC-windows-console-x64.exe" -Force
             Compress-Archive -Path "$consolePath/*" -DestinationPath "packages/VRCScalerOSC-windows-console-x64.zip" -Force
-            Write-Host "Windows Console package created successfully"
           } else {
             Write-Error "Console path not found: $consolePath"
             exit 1
@@ -67,8 +118,8 @@ jobs:
       - name: Verify packages
         shell: pwsh
         run: |
-          $packages = Get-ChildItem packages/ -Filter "*.zip"
-          Write-Host "Created packages:"
+          $packages = Get-ChildItem packages/
+          Write-Host "Created packages and installers:"
           $packages | ForEach-Object { Write-Host "  - $($_.Name) ($($_.Length) bytes)" }
           if ($packages.Count -eq 0) {
             Write-Error "No packages were created!"
@@ -99,20 +150,19 @@ jobs:
         run: dotnet restore VRCScalerOSC_Console/VRCScalerOSC_Console.csproj
 
       - name: Publish Linux Console (linux-x64 - Single File R2R with Trimming)
-        run: dotnet publish -c Release -f net9.0 -r linux-x64 --self-contained -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/linux-x64
+        run: dotnet publish -c Release -f net9.0 -r linux-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/linux-x64
 
       - name: Create packages directory
         run: mkdir -p packages
 
-      - name: Package Linux Console
+      - name: Package Linux Console (Keep Tar.gz & Extract Executable)
         run: |
           if [ -d "publish/linux-x64" ]; then
-            echo "Linux Console contents:"
-            ls -lh publish/linux-x64/
+            cp publish/linux-x64/VRCScalerOSC_Console packages/VRCScalerOSC-linux-console-x64
+            chmod +x packages/VRCScalerOSC-linux-console-x64
             cd publish/linux-x64
             tar -czf ../../packages/VRCScalerOSC-linux-console-x64.tar.gz *
             cd ../../
-            echo "Linux Console package created successfully"
           else
             echo "Error: publish/linux-x64 directory not found"
             exit 1
@@ -120,7 +170,7 @@ jobs:
 
       - name: Verify packages
         run: |
-          echo "Created packages:"
+          echo "Created packages and executables:"
           ls -lh packages/
           if [ ! -f "packages/VRCScalerOSC-linux-console-x64.tar.gz" ]; then
             echo "Error: Linux package not created!"
@@ -144,36 +194,48 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: windows-artifacts
-          path: artifacts/windows
+          path: release-packages
 
       - name: Download Linux artifacts
         uses: actions/download-artifact@v4
         with:
           name: linux-artifacts
-          path: artifacts/linux
+          path: release-packages
 
       - name: Extract version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub Release
+      - name: Create GitHub Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.get_version.outputs.VERSION }}
+          name: VRCScalerOSC ${{ steps.get_version.outputs.VERSION }}
           files: |
-            artifacts/windows/VRCScalerOSC-windows-desktop-x64.zip
-            artifacts/windows/VRCScalerOSC-windows-console-x64.zip
-            artifacts/linux/VRCScalerOSC-linux-console-x64.tar.gz
+            release-packages/VRCScalerOSC-windows-desktop-x64.msi
+            release-packages/VRCScalerOSC-windows-desktop-x64.zip
+            release-packages/VRCScalerOSC-windows-desktop-x64.exe
+            release-packages/VRCScalerOSC-windows-console-x64.zip
+            release-packages/VRCScalerOSC-windows-console-x64.exe
+            release-packages/VRCScalerOSC-linux-console-x64.tar.gz
+            release-packages/VRCScalerOSC-linux-console-x64
           draft: false
           prerelease: false
+          generate_release_notes: true
           body: |
-            VRCScalerOSC ${{ steps.get_version.outputs.VERSION }}
-            
-            Downloads:
-            - Windows Desktop (x64): VRCScalerOSC-windows-desktop-x64.zip
-            - Windows Console (x64): VRCScalerOSC-windows-console-x64.zip
-            - Linux Console (x64): VRCScalerOSC-linux-console-x64.tar.gz
-            
-            See commit history for detailed changes.
+            ## New Release Available
+
+            ### Windows Installer
+            * **Windows Desktop Installer**: `VRCScalerOSC-windows-desktop-x64.msi` (Includes installation setup wizard and desktop shortcut with EULA)
+
+            ### Application Packages (Including Dependencies)
+            * **Windows Desktop App**: `VRCScalerOSC-windows-desktop-x64.zip`
+            * **Windows Console App**: `VRCScalerOSC-windows-console-x64.zip`
+            * **Linux Console App**: `VRCScalerOSC-linux-console-x64.tar.gz`
+
+            ### Single Standalone Executables
+            * **Windows Desktop Executable**: `VRCScalerOSC-windows-desktop-x64.exe`
+            * **Windows Console Executable**: `VRCScalerOSC-windows-console-x64.exe`
+            * **Linux Console Executable**: `VRCScalerOSC-linux-console-x64`
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
