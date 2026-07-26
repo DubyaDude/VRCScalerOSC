@@ -42,25 +42,23 @@ jobs:
           wix extension add WixToolset.UI.wixext -acceptEula wix7
           wix extension add WixToolset.Util.wixext -acceptEula wix7
 
-          # 3. Check if the customized EULA path exists, create fallback folder/file if missing
-          $licenseFolder = "Docs"
+          # 3. VERIFY: Ensure the user's uploaded WordPad RTF file exists
           $licensePath = "Docs/EULA for msi.rtf"
-          
-          if (-not (Test-Path $licenseFolder)) {
-            New-Item -ItemType Directory -Path $licenseFolder
-          }
-          
           if (-not (Test-Path $licensePath)) {
-            Write-Host "Warning: $licensePath not found. Generating a fallback placeholder."
-            "VRCScalerOSC End-User License Agreement" | Set-Content -Path $licensePath
+            Write-Error "CRITICAL ERROR: $licensePath was not found in your repository!"
+            exit 1
           }
 
-          # 4. Dynamically generate WiX source code (product.wxs) with strict WiX 7 valid schema layout
+          # 4. Dynamically generate WiX source code (product.wxs) linked to your custom .ico file
           $wxsContent = @"
-          <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+          <Wix xmlns="http://wixtoolset.org" xmlns:ui="http://wixtoolset.org/ui">
             <Package Name="VRCScalerOSC" Manufacturer="VRCScalerOSC Team" Version="1.0.0" UpgradeCode="db7bc624-9b8e-4a6c-9a1d-2394fd5e2a22" Language="1028" Scope="perMachine">
               <MajorUpgrade DowngradeErrorMessage="A newer version of VRCScalerOSC is already installed." />
               <MediaTemplate EmbedCab="yes" />
+
+              <!-- Link global application icon directly to your source .ico file -->
+              <Icon Id="AppIcon" SourceFile="VRCScalerOSC.ico" />
+              <Property Id="ARPPRODUCTICON" Value="AppIcon" />
 
               <StandardDirectory Id="ProgramFiles64Folder">
                 <Directory Id="INSTALLFOLDER" Name="VRCScalerOSC" />
@@ -70,11 +68,28 @@ jobs:
               <StandardDirectory Id="ProgramMenuFolder" />
 
               <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+                <!-- Main Executable File -->
                 <Component Id="MainExecutable" Guid="a5b5c5d5-e5f5-4a5b-bcde-1234567890ab">
-                  <File Id="VRCScalerOSC_EXE" Source="publish\windows-desktop\VRCScalerOSC_Windows.exe" KeyPath="yes">
-                    <Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="VRCScalerOSC" WorkingDirectory="INSTALLFOLDER" Advertise="yes" />
-                    <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="VRCScalerOSC" WorkingDirectory="INSTALLFOLDER" Advertise="yes" />
-                  </File>
+                  <File Id="VRCScalerOSC_EXE" Source="publish\windows-desktop\VRCScalerOSC_Windows.exe" KeyPath="yes" />
+                </Component>
+
+                <!-- Shortcuts Component binding with your local custom Icon asset -->
+                <Component Id="ApplicationShortcuts" Guid="b6c6d6e6-f6a6-4b6c-bcde-8765432109ba">
+                  <Shortcut Id="DesktopShortcut" 
+                            Directory="DesktopFolder" 
+                            Name="VRCScalerOSC" 
+                            Target="[INSTALLFOLDER]VRCScalerOSC_Windows.exe" 
+                            WorkingDirectory="INSTALLFOLDER" 
+                            Icon="AppIcon" />
+                            
+                  <Shortcut Id="StartMenuShortcut" 
+                            Directory="ProgramMenuFolder" 
+                            Name="VRCScalerOSC" 
+                            Target="[INSTALLFOLDER]VRCScalerOSC_Windows.exe" 
+                            WorkingDirectory="INSTALLFOLDER" 
+                            Icon="AppIcon" />
+
+                  <RegistryValue Root="HKCU" Key="Software\VRCScalerOSCTeam\VRCScalerOSC" Name="installed" Type="integer" Value="1" KeyPath="yes" />
                 </Component>
               </ComponentGroup>
 
@@ -83,17 +98,15 @@ jobs:
               </Feature>
 
               <WixVariable Id="WixUILicenseRtf" Value="Docs\EULA for msi.rtf" />
-              
-              <!-- Correctly bind the standard UI element inside the Package container without nesting a Fragment -->
               <ui:WixUI Id="WixUI_Minimal" />
             </Package>
           </Wix>
           "@
           Set-Content -Path "product.wxs" -Value $wxsContent
 
-          # 5. Compile and link everything using standard extensions and required OSMF EULA acceptance
+          # 5. Compile and link into the final msi package
           wix build product.wxs -ext WixToolset.UI.wixext -acceptEula wix7 -o "packages/VRCScalerOSC-windows-desktop-x64.msi"
-          Write-Host "MSI Installer with custom EULA path created successfully"
+          Write-Host "MSI Installer with custom EULA and custom ICO file created successfully"
 
       - name: Package Windows Desktop (Keep Zip & Extract EXE)
         shell: pwsh
