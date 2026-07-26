@@ -55,9 +55,9 @@ jobs:
             "VRCScalerOSC End-User License Agreement" | Set-Content -Path $licensePath
           }
 
-          # 4. Dynamically generate WiX source code (product.wxs) with strict v4/v5/v7 namespace alignment
+          # 4. Dynamically generate WiX source code (product.wxs) using valid WiX 4/5/7 standard namespaces
           $wxsContent = @"
-          <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+          <Wix xmlns="http://wixtoolset.org" xmlns:ui="http://wixtoolset.org/ui">
             <Package Name="VRCScalerOSC" Manufacturer="VRCScalerOSC Team" Version="1.0.0" UpgradeCode="db7bc624-9b8e-4a6c-9a1d-2394fd5e2a22" Language="1028" Scope="perMachine">
               <MajorUpgrade DowngradeErrorMessage="A newer version of VRCScalerOSC is already installed." />
               <MediaTemplate EmbedCab="yes" />
@@ -83,50 +83,14 @@ jobs:
               </Feature>
 
               <WixVariable Id="WixUILicenseRtf" Value="Docs\EULA for msi.rtf" />
-              <SubFolder Id="WixUI_Minimal" />
-            </Package>
-          </Wix>
-          "@
-          # Note: Changed <ui:WixUI> to <SubFolder> or direct integration according to standard WiX 4+ CLI binding
-          
-          # Fix for WiX UI Minimal element injection in modern schema
-          $wxsContent = $wxsContent -replace '<SubFolder Id="WixUI_Minimal" />', '<WixBliss xmlns="http://wixtoolset.org"><WixUI Id="WixUI_Minimal" /></WixBliss>'
-          # Let's write a standard clean layout instead to avoid schema mismatches
-          $wxsContent = @"
-          <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-            <Package Name="VRCScalerOSC" Manufacturer="VRCScalerOSC Team" Version="1.0.0" UpgradeCode="db7bc624-9b8e-4a6c-9a1d-2394fd5e2a22" Language="1028" Scope="perMachine">
-              <MajorUpgrade DowngradeErrorMessage="A newer version of VRCScalerOSC is already installed." />
-              <MediaTemplate EmbedCab="yes" />
-
-              <StandardDirectory Id="ProgramFiles64Folder">
-                <Directory Id="INSTALLFOLDER" Name="VRCScalerOSC" />
-              </StandardDirectory>
-
-              <StandardDirectory Id="DesktopFolder" />
-              <StandardDirectory Id="ProgramMenuFolder" />
-
-              <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-                <Component Id="MainExecutable" Guid="a5b5c5d5-e5f5-4a5b-bcde-1234567890ab">
-                  <File Id="VRCScalerOSC_EXE" Source="publish\windows-desktop\VRCScalerOSC_Windows.exe" KeyPath="yes">
-                    <Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="VRCScalerOSC" WorkingDirectory="INSTALLFOLDER" Advertise="yes" />
-                    <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="VRCScalerOSC" WorkingDirectory="INSTALLFOLDER" Advertise="yes" />
-                  </File>
-                </Component>
-              </ComponentGroup>
-
-              <Feature Id="ProductFeature" Title="VRCScalerOSC" Level="1">
-                <ComponentGroupRef Id="ProductComponents" />
-              </Feature>
-
-              <WixVariable Id="WixUILicenseRtf" Value="Docs\EULA for msi.rtf" />
+              <ui:WixUI Id="WixUI_Minimal" />
             </Package>
           </Wix>
           "@
           Set-Content -Path "product.wxs" -Value $wxsContent
 
-          # 5. Compile and link everything into the final msi package with EULA acceptance flag
-          # We explicitly bind the UI extension via command line to render WixUI_Minimal
-          wix build product.wxs -ext WixToolset.UI.wixext -bindwixvar WixUI_Minimal -acceptEula wix7 -o "packages/VRCScalerOSC-windows-desktop-x64.msi"
+          # 5. Compile and link everything using standard extensions and required OSMF EULA acceptance
+          wix build product.wxs -ext WixToolset.UI.wixext -acceptEula wix7 -o "packages/VRCScalerOSC-windows-desktop-x64.msi"
           Write-Host "MSI Installer with custom EULA path created successfully"
 
       - name: Package Windows Desktop (Keep Zip & Extract EXE)
@@ -188,7 +152,7 @@ jobs:
         run: dotnet restore VRCScalerOSC_Console/VRCScalerOSC_Console.csproj
 
       - name: Publish Linux Console (linux-x64 - Single File R2R with Trimming)
-        run: dotnet publish -c Release -f net9.0-r linux-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/linux-x64
+        run: dotnet publish -c Release -f net9.0 -r linux-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/linux-x64
 
       - name: Create packages directory
         run: mkdir -p packages
