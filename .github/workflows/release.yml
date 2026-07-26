@@ -27,7 +27,7 @@ jobs:
         run: dotnet publish -c Release -f net9.0-windows7.0 -r win-x64 --self-contained -p:PublishSingleFile=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Windows/VRCScalerOSC_Windows.csproj -o ./publish/windows-desktop
 
       - name: Publish Windows Console (win-x64 - Single File R2R with Trimming)
-        run: dotnet publish -c Release -f net9.0-r win-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/win-x64
+        run: dotnet publish -c Release -f net9.0 -r win-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=none -p:DebugSymbols=false VRCScalerOSC_Console/VRCScalerOSC_Console.csproj -o ./publish/win-x64
 
       - name: Create packages directory
         run: mkdir packages
