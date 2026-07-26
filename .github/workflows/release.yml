@@ -35,12 +35,14 @@ jobs:
       - name: Install WiX Toolset and Build MSI with EULA
         shell: pwsh
         run: |
-          # 1. Install WiX Toolset core tools and required extensions
+          # 1. Install WiX Toolset core tools
           dotnet tool install --global wix
-          wix extension add WixToolset.UI.wixext
-          wix extension add WixToolset.Util.wixext
 
-          # 2. Check if the customized EULA path exists, create fallback folder/file if missing
+          # 2. Add required extensions with EULA acceptance flag
+          wix extension add WixToolset.UI.wixext -acceptEula wix7
+          wix extension add WixToolset.Util.wixext -acceptEula wix7
+
+          # 3. Check if the customized EULA path exists, create fallback folder/file if missing
           $licenseFolder = "Docs"
           $licensePath = "Docs/EULA for msi.rtf"
           
@@ -53,7 +55,7 @@ jobs:
             "VRCScalerOSC End-User License Agreement" | Set-Content -Path $licensePath
           }
 
-          # 3. Dynamically generate WiX source code (product.wxs) with double-quoted specific path
+          # 4. Dynamically generate WiX source code (product.wxs)
           $wxsContent = @"
           <Wix xmlns="http://wixtoolset.org" xmlns:ui="http://wixtoolset.org/ui">
             <Package Name="VRCScalerOSC" Manufacturer="VRCScalerOSC Team" Version="1.0.0" UpgradeCode="db7bc624-9b8e-4a6c-9a1d-2394fd5e2a22" Language="1028" Scope="perMachine">
@@ -87,8 +89,8 @@ jobs:
           "@
           Set-Content -Path "product.wxs" -Value $wxsContent
 
-          # 4. Compile and link everything into the final msi package
-          wix build product.wxs -o "packages/VRCScalerOSC-windows-desktop-x64.msi"
+          # 5. Compile and link everything into the final msi package with EULA acceptance flag
+          wix build product.wxs -acceptEula wix7 -o "packages/VRCScalerOSC-windows-desktop-x64.msi"
           Write-Host "MSI Installer with custom EULA path created successfully"
 
       - name: Package Windows Desktop (Keep Zip & Extract EXE)
