@@ -55,9 +55,9 @@ jobs:
             "VRCScalerOSC End-User License Agreement" | Set-Content -Path $licensePath
           }
 
-          # 4. Dynamically generate WiX source code (product.wxs) using separate nested UI namespaces to bypass WIX0199
+          # 4. Dynamically generate WiX source code (product.wxs) with strict WiX 7 valid schema layout
           $wxsContent = @"
-          <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+          <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
             <Package Name="VRCScalerOSC" Manufacturer="VRCScalerOSC Team" Version="1.0.0" UpgradeCode="db7bc624-9b8e-4a6c-9a1d-2394fd5e2a22" Language="1028" Scope="perMachine">
               <MajorUpgrade DowngradeErrorMessage="A newer version of VRCScalerOSC is already installed." />
               <MediaTemplate EmbedCab="yes" />
@@ -84,9 +84,8 @@ jobs:
 
               <WixVariable Id="WixUILicenseRtf" Value="Docs\EULA for msi.rtf" />
               
-              <Fragment>
-                <ui:WixUI Id="WixUI_Minimal" xmlns:ui="http://wixtoolset.org" />
-              </Fragment>
+              <!-- Correctly bind the standard UI element inside the Package container without nesting a Fragment -->
+              <ui:WixUI Id="WixUI_Minimal" />
             </Package>
           </Wix>
           "@
