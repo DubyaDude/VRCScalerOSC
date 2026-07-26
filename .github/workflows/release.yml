@@ -75,20 +75,8 @@ jobs:
 
                 <!-- Shortcuts Component binding with your local custom Icon asset -->
                 <Component Id="ApplicationShortcuts" Guid="b6c6d6e6-f6a6-4b6c-bcde-8765432109ba">
-                  <Shortcut Id="DesktopShortcut" 
-                            Directory="DesktopFolder" 
-                            Name="VRCScalerOSC" 
-                            Target="[INSTALLFOLDER]VRCScalerOSC_Windows.exe" 
-                            WorkingDirectory="INSTALLFOLDER" 
-                            Icon="AppIcon" />
-                            
-                  <Shortcut Id="StartMenuShortcut" 
-                            Directory="ProgramMenuFolder" 
-                            Name="VRCScalerOSC" 
-                            Target="[INSTALLFOLDER]VRCScalerOSC_Windows.exe" 
-                            WorkingDirectory="INSTALLFOLDER" 
-                            Icon="AppIcon" />
-
+                  <Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="VRCScalerOSC" Target="[INSTALLFOLDER]VRCScalerOSC_Windows.exe" WorkingDirectory="INSTALLFOLDER" Icon="AppIcon" />
+                  <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="VRCScalerOSC" Target="[INSTALLFOLDER]VRCScalerOSC_Windows.exe" WorkingDirectory="INSTALLFOLDER" Icon="AppIcon" />
                   <RegistryValue Root="HKCU" Key="Software\VRCScalerOSCTeam\VRCScalerOSC" Name="installed" Type="integer" Value="1" KeyPath="yes" />
                 </Component>
               </ComponentGroup>
