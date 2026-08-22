@@ -1,6 +1,6 @@
 ﻿# VRCScalerOSC
 
-![VRC Scaler OSC](docs/image/appView.png)
+![VRC Scaler OSC](Docs/image/appView.png)
 
 ## Introduction
 
