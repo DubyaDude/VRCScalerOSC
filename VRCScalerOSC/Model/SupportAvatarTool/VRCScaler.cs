@@ -201,7 +201,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(new OSCData("/input/LookHorizontal", "f", 0f));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/LookVertical ", (isInitialized, service, data) =>
+            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/LookVertical", (isInitialized, service, data) =>
             {
                 float speed = 0;
                 if (isInitialized && data.ValueF.HasValue && MathF.Abs(data.ValueF.Value) > 0.3f)
@@ -221,6 +221,24 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                 {
                     _prevLookVerticalValue = 0f;
                     service?.SendOscMessage(new OSCData("/input/LookVertical", "f", 0f));
+                }
+            });
+            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/UseRight", async (isInitialized, service, data) =>
+            {
+                if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
+                {
+                    service?.SendOscMessage(OSCData.GetTrueOSCData("/input/UseRight", "T"));
+                    await Task.Delay(500);
+                    service?.SendOscMessage(OSCData.GetFalseOSCData("/input/UseRight", "F"));
+                }
+            });
+            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/UseLeft", async (isInitialized, service, data) =>
+            {
+                if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
+                {
+                    service?.SendOscMessage(OSCData.GetTrueOSCData("/input/UseLeft", "T"));
+                    await Task.Delay(500);
+                    service?.SendOscMessage(OSCData.GetFalseOSCData("/input/UseLeft", "F"));
                 }
             });
             functions.TryAdd($"{controller.ScalerOSCPathPrefix}/ScaleNow", (isInitialized, service, data) =>
