@@ -23,6 +23,24 @@ Available in multiple languages:
 - [日本語 (Japanese)](Docs/ja-JP/README.md)
 - [한국어 (Korean)](Docs/ko-KR/README.md)
 
+## Download
+
+[Latest Release](https://github.com/phone2345/VRCScalerOSC/releases/latest)
+
+### Windows Installer
+* **Windows Desktop Installer**: `VRCScalerOSC-windows-desktop-x64.msi` (Includes installation setup wizard and desktop shortcut with EULA)
+
+### Application Packages (Including Dependencies)
+* **Windows Desktop App**: `VRCScalerOSC-windows-desktop-x64.zip`
+* **Windows Console App**: `VRCScalerOSC-windows-console-x64.zip`
+* **Linux Console App**: `VRCScalerOSC-linux-console-x64.tar.gz`
+
+### Single Standalone Executables
+* **Windows Desktop Executable**: `VRCScalerOSC-windows-desktop-x64.exe`
+* **Windows Console Executable**: `VRCScalerOSC-windows-console-x64.exe`
+* **Linux Console Executable**: `VRCScalerOSC-linux-console-x64`
+
+
 ## License
 
 This project is licensed under the MIT License. See `LICENSE` for details.
