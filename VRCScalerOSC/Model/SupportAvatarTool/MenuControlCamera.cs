@@ -13,9 +13,9 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
         private float _lookAtMeYOffsetPuppet = 0f;
         private readonly PoseData _modifyPoseData = new(0f, 0f, 0f, 0f, 0f, 0f);
 
-        public override void InitOSCFunctions(Dictionary<string, Action<bool, Service_VRCOSCProtocols?, OSCData>>.AlternateLookup<ReadOnlySpan<char>> functions)
+        public override void InitOSCFunctions(OscEventCollection functions)
         {
-            functions.TryAdd("/usercamera/Mode", (_, service, data) =>
+            functions.AddEvent("/usercamera/Mode", (_, service, data) =>
             {
                 if (data.ValueI.HasValue)
                 {
@@ -26,44 +26,44 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd("/usercamera/Close", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Capture", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/CaptureDelayed", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/TriggerTakesPhotos", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/DollyPathsStayVisible", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/RollWhileFlying", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/GreenScreen", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Lock", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/OrientationIsLandscape", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Flying", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/SmoothMovement", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/AutoLevelRoll", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/AutoLevelPitch", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/ShowUIInCamera", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/LocalPlayer", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/RemotePlayer", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Environment", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Streaming", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/ShowFocus", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/AudioFromCamera", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/LookAtMe", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Zoom", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Exposure", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/FocalDistance", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Aperture", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Hue", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Saturation", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Lightness", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/FlySpeed", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/TurnSpeed", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/SmoothingStrength", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/PhotoRate", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Duration", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/LookAtMeXOffset", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/LookAtMeYOffset", SetOSCDataToMenuControlCameraViewModel);
-            functions.TryAdd("/usercamera/Pose", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Close", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Capture", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/CaptureDelayed", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/TriggerTakesPhotos", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/DollyPathsStayVisible", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/RollWhileFlying", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/GreenScreen", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Lock", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/OrientationIsLandscape", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Flying", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/SmoothMovement", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/AutoLevelRoll", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/AutoLevelPitch", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/ShowUIInCamera", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/LocalPlayer", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/RemotePlayer", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Environment", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Streaming", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/ShowFocus", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/AudioFromCamera", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/LookAtMe", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Zoom", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Exposure", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/FocalDistance", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Aperture", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Hue", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Saturation", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Lightness", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/FlySpeed", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/TurnSpeed", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/SmoothingStrength", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/PhotoRate", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Duration", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/LookAtMeXOffset", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/LookAtMeYOffset", SetOSCDataToMenuControlCameraViewModel);
+            functions.AddEvent("/usercamera/Pose", SetOSCDataToMenuControlCameraViewModel);
 
-            functions.TryAdd($"{oscPathPrefix}/Mode", (IsInitialized, service, data) =>
+            functions.AddEvent($"{oscPathPrefix}/Mode", (IsInitialized, service, data) =>
             {
                 if (IsInitialized && data.ValueI.HasValue)
                 {
@@ -73,40 +73,40 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{oscPathPrefix}/Close", TransferButtonData);
-            functions.TryAdd($"{oscPathPrefix}/Capture", TransferButtonData);
-            functions.TryAdd($"{oscPathPrefix}/CaptureDelayed", TransferButtonData);
-            functions.TryAdd($"{oscPathPrefix}/TriggerTakesPhotos", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/DollyPathsStayVisible", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/RollWhileFlying", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/GreenScreen", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/Lock", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/OrientationIsLandscape", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/Flying", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/SmoothMovement", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/AutoLevelRoll", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/AutoLevelPitch", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/ShowUIInCamera", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/LocalPlayer", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/RemotePlayer", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/Environment", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/Streaming", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/ShowFocus", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/AudioFromCamera", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/LookAtMe", TransferToggleData);
-            functions.TryAdd($"{oscPathPrefix}/Zoom", TransferValueData);
-            functions.TryAdd($"{oscPathPrefix}/Exposure", TransferValueData);
-            functions.TryAdd($"{oscPathPrefix}/FocalDistance", TransferValueData);
-            functions.TryAdd($"{oscPathPrefix}/Aperture", TransferValueData);
-            functions.TryAdd($"{oscPathPrefix}/Hue", TransferValueData2);
-            functions.TryAdd($"{oscPathPrefix}/Saturation", TransferValueData2);
-            functions.TryAdd($"{oscPathPrefix}/Lightness", TransferValueData2);
-            functions.TryAdd($"{oscPathPrefix}/FlySpeed", TransferValueData);
-            functions.TryAdd($"{oscPathPrefix}/TurnSpeed", TransferValueData);
-            functions.TryAdd($"{oscPathPrefix}/SmoothingStrength", TransferValueData);
-            functions.TryAdd($"{oscPathPrefix}/PhotoRate", TransferValueData);
-            functions.TryAdd($"{oscPathPrefix}/Duration", TransferValueData);
-            functions.TryAdd($"{oscPathPrefix}/LookAtMeOffsetPuppetOn", (IsInitialized, service, data) =>
+            functions.AddEvent($"{oscPathPrefix}/Close", TransferButtonData);
+            functions.AddEvent($"{oscPathPrefix}/Capture", TransferButtonData);
+            functions.AddEvent($"{oscPathPrefix}/CaptureDelayed", TransferButtonData);
+            functions.AddEvent($"{oscPathPrefix}/TriggerTakesPhotos", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/DollyPathsStayVisible", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/RollWhileFlying", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/GreenScreen", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/Lock", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/OrientationIsLandscape", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/Flying", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/SmoothMovement", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/AutoLevelRoll", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/AutoLevelPitch", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/ShowUIInCamera", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/LocalPlayer", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/RemotePlayer", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/Environment", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/Streaming", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/ShowFocus", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/AudioFromCamera", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/LookAtMe", TransferToggleData);
+            functions.AddEvent($"{oscPathPrefix}/Zoom", TransferValueData);
+            functions.AddEvent($"{oscPathPrefix}/Exposure", TransferValueData);
+            functions.AddEvent($"{oscPathPrefix}/FocalDistance", TransferValueData);
+            functions.AddEvent($"{oscPathPrefix}/Aperture", TransferValueData);
+            functions.AddEvent($"{oscPathPrefix}/Hue", TransferValueData2);
+            functions.AddEvent($"{oscPathPrefix}/Saturation", TransferValueData2);
+            functions.AddEvent($"{oscPathPrefix}/Lightness", TransferValueData2);
+            functions.AddEvent($"{oscPathPrefix}/FlySpeed", TransferValueData);
+            functions.AddEvent($"{oscPathPrefix}/TurnSpeed", TransferValueData);
+            functions.AddEvent($"{oscPathPrefix}/SmoothingStrength", TransferValueData);
+            functions.AddEvent($"{oscPathPrefix}/PhotoRate", TransferValueData);
+            functions.AddEvent($"{oscPathPrefix}/Duration", TransferValueData);
+            functions.AddEvent($"{oscPathPrefix}/LookAtMeOffsetPuppetOn", (IsInitialized, service, data) =>
             {
                 if (data.ValueB.HasValue && !data.ValueB.Value)
                 {
@@ -114,7 +114,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     _timer1Runing = false;
                 }
             });
-            functions.TryAdd($"{oscPathPrefix}/LookAtMeXOffset", (IsInitialized, service, data) =>
+            functions.AddEvent($"{oscPathPrefix}/LookAtMeXOffset", (IsInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {
@@ -139,7 +139,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{oscPathPrefix}/LookAtMeYOffset", (IsInitialized, service, data) =>
+            functions.AddEvent($"{oscPathPrefix}/LookAtMeYOffset", (IsInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {

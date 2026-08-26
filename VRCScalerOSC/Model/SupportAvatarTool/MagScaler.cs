@@ -6,15 +6,17 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
 {
     public class MagScaler(Controller_Scaler controller, ViewModel_Scaler viewModel) : SupportAvatarTool
     {
-        public override void InitOSCFunctions(Dictionary<string, Action<bool, Service_VRCOSCProtocols?, OSCData>>.AlternateLookup<ReadOnlySpan<char>> supportAbatarToolOSCFuns)
+        public override void InitOSCFunctions(OscEventCollection supportAbatarToolOSCFuns)
         {
-            supportAbatarToolOSCFuns.TryAdd("/avatar/parameters/ScaleFactorInverse", (isInitialized, service, data) =>
+            supportAbatarToolOSCFuns.AddEvent("/avatar/parameters/ScaleFactorInverse", (isInitialized, service, data) =>
             {
-                if (data.ValueF.HasValue) DefaultEyeHeight = EyeHeightAsMeters * data.ValueF.Value;
+                if (data.ValueF.HasValue)
+                    DefaultEyeHeight = EyeHeightAsMeters * data.ValueF.Value;
             });
-            supportAbatarToolOSCFuns.TryAdd("/avatar/parameters/EyeHeightAsMeters", (isInitialized, service, data) =>
+            supportAbatarToolOSCFuns.AddEvent("/avatar/parameters/EyeHeightAsMeters", (isInitialized, service, data) =>
             {
-                if (data.ValueF.HasValue) DefaultEyeHeight = data.ValueF.Value * ScaleFactorInverse;
+                if (data.ValueF.HasValue)
+                    DefaultEyeHeight = data.ValueF.Value * ScaleFactorInverse;
             });
         }
         public override Action<bool, Service_VRCOSCProtocols?, OSCData>? TryAddNewFunction(OSCData initialData)

@@ -12,7 +12,7 @@ namespace VRCScalerOSC.Controller
     {
         private readonly Service_VRCOSCQuery _serviceOSCQuery = new();
         private Service_VRCOSCProtocols? _serviceOSCProtocols;
-        private Dictionary<string, Action<bool, Service_VRCOSCProtocols?, OSCData>>.AlternateLookup<ReadOnlySpan<char>> _actionAfterGetOSCData;
+        private OscEventCollection _actionAfterGetOSCData;
         public event Service_VRCOSCProtocols.EventHandler? OSCDataSanded
         {
             add
@@ -71,7 +71,7 @@ namespace VRCScalerOSC.Controller
             set
             {
                 _supportAvatarTool = value;
-                _actionAfterGetOSCData = new Dictionary<string, Action<bool, Service_VRCOSCProtocols?, OSCData>>().GetAlternateLookup<ReadOnlySpan<char>>();
+                _actionAfterGetOSCData = new();
                 InitOSCActions();
             }
         }
@@ -149,7 +149,7 @@ namespace VRCScalerOSC.Controller
         #region Init Scaler
         private void InitOSCActions()
         {
-            _actionAfterGetOSCData.TryAdd("/avatar/change", (isInitialized, service, data) =>
+            _actionAfterGetOSCData.AddEvent("/avatar/change", (isInitialized, service, data) =>
             {
                 Debug.WriteLine($"{data} IsInitialized={isInitialized}");
                 if (isInitialized)
@@ -162,7 +162,7 @@ namespace VRCScalerOSC.Controller
                     ReLoadVRCData();
                 }
             });
-            _actionAfterGetOSCData.TryAdd("/avatar/eyeheightscalingallowed", (isInitialized, service, data) =>
+            _actionAfterGetOSCData.AddEvent("/avatar/eyeheightscalingallowed", (isInitialized, service, data) =>
             {
                 if (data.ValueB.HasValue && !data.ValueB.Value)
                 {
@@ -175,7 +175,7 @@ namespace VRCScalerOSC.Controller
                     service?.SendOscMessage(OSCData.GetFalseOSCData(ScalerOSCPathPrefix + "/ScalerUnUsable", "f"));
                 }
             });
-            _actionAfterGetOSCData.TryAdd("/avatar/parameters/ScaleFactor", (isInitialized, service, data) =>
+            _actionAfterGetOSCData.AddEvent("/avatar/parameters/ScaleFactor", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {
@@ -187,7 +187,7 @@ namespace VRCScalerOSC.Controller
                     }
                 }
             });
-            _actionAfterGetOSCData.TryAdd("/avatar/parameters/EyeHeightAsMeters", (isInitialized, service, data) =>
+            _actionAfterGetOSCData.AddEvent("/avatar/parameters/EyeHeightAsMeters", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {
@@ -824,9 +824,8 @@ namespace VRCScalerOSC.Controller
         #region OSC Scaling
         private void SOSCProtocols_OnGetOSCData(Service_VRCOSCProtocols? service, OSCData data)
         {
-            if (_actionAfterGetOSCData.TryGetValue(data.Addr, out var action))
+            if (_actionAfterGetOSCData.TryExecuteEvent(data.Addr, _isInitialized, service, data))
             {
-                action(_isInitialized, service, data);
                 return;
             }
             else if (!_isInitialized && _supportAvatarTool != null)
@@ -836,7 +835,7 @@ namespace VRCScalerOSC.Controller
                     Action<bool, Service_VRCOSCProtocols?, OSCData>? newAction = supportScaler.TryAddNewFunction(data);
                     if (newAction != null)
                     {
-                        _actionAfterGetOSCData.TryAdd(data.Addr, newAction);
+                        _actionAfterGetOSCData.AddEvent(data.Addr, newAction);
                         newAction(_isInitialized, service, data);
                         return;
                     }

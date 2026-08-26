@@ -16,12 +16,12 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
         private System.Threading.Timer? _waitMtueDoubleClickTimer;
         private System.Threading.Timer? _setScaleGestureDelay;
         private readonly Dictionary<int, float> _templateHeight = [];
-        public override void InitOSCFunctions(Dictionary<string, Action<bool, Service_VRCOSCProtocols?, OSCData>>.AlternateLookup<ReadOnlySpan<char>> functions)
+        public override void InitOSCFunctions(OscEventCollection functions)
         {
             #region Scaler
-            functions.TryAdd("/avatar/parameters/MuteSelf", DoubleClickMuteCanSetGesture);
-            functions.TryAdd("/avatar/parameters/Earmuffs", DoubleClickMuteCanSetGesture);
-            functions.TryAdd("/avatar/parameters/GestureLeft", (isInitialized, service, data) =>
+            functions.AddEvent("/avatar/parameters/MuteSelf", DoubleClickMuteCanSetGesture);
+            functions.AddEvent("/avatar/parameters/Earmuffs", DoubleClickMuteCanSetGesture);
+            functions.AddEvent("/avatar/parameters/GestureLeft", (isInitialized, service, data) =>
             {
                 if (data.ValueI.HasValue)
                 {
@@ -62,7 +62,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd("/avatar/parameters/GestureRight", (isInitialized, service, data) =>
+            functions.AddEvent("/avatar/parameters/GestureRight", (isInitialized, service, data) =>
             {
                 if (data.ValueI.HasValue)
                 {
@@ -104,7 +104,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                 }
             });
 
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/MovingPuppetOn", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Input/MovingPuppetOn", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && !data.ValueB.Value)
                 {
@@ -112,7 +112,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(new OSCData("/input/Vertical", "f", 0f));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/Jump", async (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Input/Jump", async (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -121,7 +121,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData("/input/Jump", "F"));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/Horizontal", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Input/Horizontal", (isInitialized, service, data) =>
             {
                 float speed = 0;
                 if (isInitialized && data.ValueF.HasValue && MathF.Abs(data.ValueF.Value) > 0.3f)
@@ -150,7 +150,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData("/input/Run", "F"));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/Vertical", (isInitialized, service, data) => 
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Input/Vertical", (isInitialized, service, data) => 
             {
                 float speed = 0;
                 if (isInitialized && data.ValueF.HasValue && MathF.Abs(data.ValueF.Value) > 0.3f)
@@ -179,7 +179,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData("/input/Run", "F"));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/LookHorizontal", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Input/LookHorizontal", (isInitialized, service, data) =>
             {
                 float speed = 0;
                 if (isInitialized && data.ValueF.HasValue && MathF.Abs(data.ValueF.Value) > 0.3f)
@@ -201,7 +201,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(new OSCData("/input/LookHorizontal", "f", 0f));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/LookVertical", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Input/LookVertical", (isInitialized, service, data) =>
             {
                 float speed = 0;
                 if (isInitialized && data.ValueF.HasValue && MathF.Abs(data.ValueF.Value) > 0.3f)
@@ -223,7 +223,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(new OSCData("/input/LookVertical", "f", 0f));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/UseRight", async (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Input/UseRight", async (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -232,7 +232,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData("/input/UseRight", "F"));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Input/UseLeft", async (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Input/UseLeft", async (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -241,7 +241,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData("/input/UseLeft", "F"));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/ScaleNow", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/ScaleNow", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -249,7 +249,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Meters/ScaleNow", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Meters/ScaleNow", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -257,7 +257,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Multiplier/ScaleNow", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Multiplier/ScaleNow", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -265,7 +265,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SmoothScaleStart", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SmoothScaleStart", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -273,7 +273,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Meters/SmoothScaleStart", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Meters/SmoothScaleStart", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -281,7 +281,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Multiplier/SmoothScaleStart", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Multiplier/SmoothScaleStart", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -289,7 +289,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/ScalingNow", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/ScalingNow", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -297,7 +297,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Meters/ScalingNow", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Meters/ScalingNow", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -305,7 +305,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Multiplier/ScalingNow", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Multiplier/ScalingNow", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -313,7 +313,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SmoothScalingStart", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SmoothScalingStart", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -321,7 +321,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Meters/SmoothScalingStart", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Meters/SmoothScalingStart", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -329,7 +329,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Multiplier/SmoothScalingStart", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Multiplier/SmoothScalingStart", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -337,77 +337,77 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/ScalingEyeHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/ScalingEyeHeight", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScalingByTime(data.ValueF.Value, 0f);//Scaling a input value without smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Meters/ScalingEyeHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Meters/ScalingEyeHeight", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScalingInMetersByTime(data.ValueF.Value, 0f);//Scaling a input value in meters without smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Multiplier/ScalingEyeHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Multiplier/ScalingEyeHeight", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScalingInMultiplierByTime(data.ValueF.Value, 0f);//Scaling a input value in multiplier without smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SmoothScalingEyeHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SmoothScalingEyeHeight", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScaling(viewModel.IsMultiplier, viewModel.FixedRate, data.ValueF.Value, viewModel.ScalingTime); //Scaling a input value with smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Meters/SmoothScalingEyeHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Meters/SmoothScalingEyeHeight", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScaling(false, viewModel.FixedRate, data.ValueF.Value, viewModel.ScalingTime); //Scaling a input value in meters with smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Multiplier/SmoothScalingEyeHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Multiplier/SmoothScalingEyeHeight", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScaling(true, viewModel.FixedRate, data.ValueF.Value, viewModel.ScalingTime); //Scaling a input in multiplier value with smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/ScalingPercentage", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/ScalingPercentage", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScaling(false, false, data.ValueF.Value * viewModel.CurrentEyeHeight / 100f); //Scaling a input value in percentage without smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SmoothScalingPercentage", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SmoothScalingPercentage", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScaling(false, viewModel.FixedRate, data.ValueF.Value * viewModel.CurrentEyeHeight / 100f, viewModel.ScalingTime, viewModel.ScalingRate); //Scaling a input value in percentage with smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/ScalingDiffPercentage", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/ScalingDiffPercentage", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScaling(false, false, viewModel.CurrentEyeHeight * (1 + data.ValueF.Value / 100f)); //Scaling a input value in diff-percentage with smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SmoothScalingDiffPercentage", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SmoothScalingDiffPercentage", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
                     controller.StartScaling(false, viewModel.FixedRate, viewModel.CurrentEyeHeight * (1 + data.ValueF.Value / 100f), viewModel.ScalingTime, viewModel.ScalingRate); //Scaling a input value in diff-percentage with smoothtime
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetEyeHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetEyeHeight", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
@@ -422,7 +422,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetMultiplier", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetMultiplier", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
@@ -437,7 +437,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetPercentage", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetPercentage", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
@@ -452,7 +452,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetDiffPercentage", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetDiffPercentage", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue && data.ValueF.Value != 0)
                 {
@@ -467,7 +467,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetScalingTime", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetScalingTime", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {
@@ -484,7 +484,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetScalingRate", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetScalingRate", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {
@@ -501,7 +501,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SwitchAutoAbort", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SwitchAutoAbort", (isInitialized, service, data) =>
             {
                 if (viewModel.AutoAbort && data.ValueB.HasValue && !data.ValueB.Value) //switch auto-abort toggle on / off
                 {
@@ -512,7 +512,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     viewModel.AutoAbort = true;
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetMaxEyeHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetMaxEyeHeight", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {
@@ -526,7 +526,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetMinEyeHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetMinEyeHeight", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {
@@ -540,7 +540,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SwitchFixedRate", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SwitchFixedRate", (isInitialized, service, data) =>
             {
                 if (viewModel.FixedRate && data.ValueB.HasValue && !data.ValueB.Value) //switch fiexd rate toggle on / off
                 {
@@ -551,44 +551,44 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     viewModel.FixedRate = true;
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetFixedRate", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetFixedRate", (isInitialized, service, data) =>
             {
                 if (data.ValueB.HasValue && data.ValueB.Value)
                 {
                     viewModel.FixedRate = true; //switch fiexd rate toggle on
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/SetFixedTime", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/SetFixedTime", (isInitialized, service, data) =>
             {
                 if (data.ValueB.HasValue && data.ValueB.Value)
                 {
                     viewModel.FixedRate = false; //switch fiexd rate toggle off
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/IsMultiplier", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/IsMultiplier", (isInitialized, service, data) =>
             {
                 viewModel.IsMultiplier = data.ValueB.HasValue && data.ValueB.Value; //switch using real size toggle
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/GrowUp", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/GrowUp", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {
                     controller.ScaleGrowUp(data.ValueF.Value);
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/ShrinkDown", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/ShrinkDown", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue)
                 {
                     controller.ScaleShrinkDown(data.ValueF.Value);
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/StopScaling", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/StopScaling", (isInitialized, service, data) =>
             {
                 controller.StopScaling(); //Stop Scaling
                 service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/BackAvatarDefaultHeight", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/BackAvatarDefaultHeight", (isInitialized, service, data) =>
             {
                 if (isInitialized && data.ValueB.HasValue && data.ValueB.Value)
                 {
@@ -596,7 +596,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     service?.SendOscMessage(OSCData.GetFalseOSCData(data.Addr, data.TypeString));
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Gesture/Mode", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Gesture/Mode", (isInitialized, service, data) =>
             {
                 if (data.ValueI.HasValue && data.ValueI.Value >= 0 && data.ValueI.Value <= 5)
                 {
@@ -621,17 +621,17 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
                     }
                 }
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Gesture/WorldScaling", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Gesture/WorldScaling", (isInitialized, service, data) =>
             {
                 viewModel.WorldScaling = data.ValueB.HasValue && data.ValueB.Value;
             });
-            functions.TryAdd($"{controller.ScalerOSCPathPrefix}/Gesture/DoubleMuteSetGesture", (isInitialized, service, data) =>
+            functions.AddEvent($"{controller.ScalerOSCPathPrefix}/Gesture/DoubleMuteSetGesture", (isInitialized, service, data) =>
             {
                 viewModel.DoubleClickMuteCanSetGesture = data.ValueB.HasValue && data.ValueB.Value;
             });
             for (int i = 0; i < viewModel.DefaultHeightValueList.Count; i++)
             {
-                functions.TryAdd($"{controller.ScalerOSCPathPrefix}/DefaultValue{i}/Value", GetScalerDefaultValue_Value);
+                functions.AddEvent($"{controller.ScalerOSCPathPrefix}/DefaultValue{i}/Value", GetScalerDefaultValue_Value);
             }
             #endregion
         }

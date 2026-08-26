@@ -6,13 +6,13 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
 {
     internal class JackalAvatarScalerV3(Controller_Scaler controller, ViewModel_Scaler viewModel) : SupportAvatarTool
     {
-        public override void InitOSCFunctions(Dictionary<string, Action<bool, Service_VRCOSCProtocols?, OSCData>>.AlternateLookup<ReadOnlySpan<char>> supportAbatarToolOSCFuns)
+        public override void InitOSCFunctions(OscEventCollection supportAbatarToolOSCFuns)
         {
-            supportAbatarToolOSCFuns.TryAdd("/avatar/parameters/ScaleFactorInverse", (isInitialized, service, data) =>
+            supportAbatarToolOSCFuns.AddEvent("/avatar/parameters/ScaleFactorInverse", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue) DefaultEyeHeight = EyeHeightAsMeters * data.ValueF.Value;
             });
-            supportAbatarToolOSCFuns.TryAdd("/avatar/parameters/EyeHeightAsMeters", (isInitialized, service, data) =>
+            supportAbatarToolOSCFuns.AddEvent("/avatar/parameters/EyeHeightAsMeters", (isInitialized, service, data) =>
             {
                 if (data.ValueF.HasValue) DefaultEyeHeight = data.ValueF.Value * ScaleFactorInverse;
             });
