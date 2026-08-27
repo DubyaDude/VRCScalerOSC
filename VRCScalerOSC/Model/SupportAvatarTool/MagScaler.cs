@@ -343,8 +343,7 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
             { 99, 56046f },
             { 100, 70057f },
             { 101, 87571f },
-            { 102, 87571f },
-            { 103, 100000f },
+            { 102, 100000f },
         }.ToFrozenDictionary();
 
         private static readonly IReadOnlyList<KeyValuePair<int, float>> SortedNewScaleParameterMapping =
