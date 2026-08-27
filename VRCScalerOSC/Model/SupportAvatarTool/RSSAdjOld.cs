@@ -13,11 +13,19 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
         {
             supportAbatarToolOSCFuns.AddEvent("/avatar/parameters/ScaleFactorInverse", (IsInitialized, service, data) =>
             {
-                if (data.ValueF.HasValue) DefaultEyeHeight = EyeHeightAsMeters * data.ValueF.Value;
+                if (data.ValueF.HasValue)
+                {
+                    ScaleFactorInverse = data.ValueF.Value;
+                    DefaultEyeHeight = EyeHeightAsMeters * ScaleFactorInverse;
+                }
             });
             supportAbatarToolOSCFuns.AddEvent("/avatar/parameters/EyeHeightAsMeters", (IsInitialized, service, data) =>
             {
-                if (data.ValueF.HasValue) DefaultEyeHeight = data.ValueF.Value * ScaleFactorInverse;
+                if (data.ValueF.HasValue)
+                {
+                    EyeHeightAsMeters = data.ValueF.Value;
+                    DefaultEyeHeight = EyeHeightAsMeters * ScaleFactorInverse;
+                }
             });
         }
         public override Action<bool, Service_VRCOSCProtocols?, OSCData>? TryAddNewFunction(OSCData data)
