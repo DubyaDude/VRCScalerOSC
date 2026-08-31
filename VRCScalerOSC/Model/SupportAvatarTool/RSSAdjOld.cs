@@ -9,15 +9,23 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
         private float RSSAdjScaleAdjDisplay = 0f;
         private float RSSAdjScaleMultiplier = 100f;
         private bool RSSAdjScaleRealSize = true;
-        public override void InitOSCFunctions(Dictionary<string, Action<bool, Service_VRCOSCProtocols?, OSCData>>.AlternateLookup<ReadOnlySpan<char>> supportAbatarToolOSCFuns)
+        public override void InitOSCFunctions(OscEventCollection supportAbatarToolOSCFuns)
         {
-            supportAbatarToolOSCFuns.TryAdd("/avatar/parameters/ScaleFactorInverse", (IsInitialized, service, data) =>
+            supportAbatarToolOSCFuns.AddEvent("/avatar/parameters/ScaleFactorInverse", (IsInitialized, service, data) =>
             {
-                if (data.ValueF.HasValue) DefaultEyeHeight = EyeHeightAsMeters * data.ValueF.Value;
+                if (data.ValueF.HasValue)
+                {
+                    ScaleFactorInverse = data.ValueF.Value;
+                    DefaultEyeHeight = EyeHeightAsMeters * ScaleFactorInverse;
+                }
             });
-            supportAbatarToolOSCFuns.TryAdd("/avatar/parameters/EyeHeightAsMeters", (IsInitialized, service, data) =>
+            supportAbatarToolOSCFuns.AddEvent("/avatar/parameters/EyeHeightAsMeters", (IsInitialized, service, data) =>
             {
-                if (data.ValueF.HasValue) DefaultEyeHeight = data.ValueF.Value * ScaleFactorInverse;
+                if (data.ValueF.HasValue)
+                {
+                    EyeHeightAsMeters = data.ValueF.Value;
+                    DefaultEyeHeight = EyeHeightAsMeters * ScaleFactorInverse;
+                }
             });
         }
         public override Action<bool, Service_VRCOSCProtocols?, OSCData>? TryAddNewFunction(OSCData data)
