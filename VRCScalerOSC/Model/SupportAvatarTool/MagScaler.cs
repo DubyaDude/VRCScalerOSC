@@ -473,10 +473,15 @@ namespace VRCScalerOSC.Model.SupportAvatarTool
 
         private void SetScale(int? oscValue, FrozenDictionary<int, float> mapping, int scale1xIndex)
         {
-            if (oscValue == null || oscValue == 0 || oscValue == scale1xIndex)
+            if (oscValue == null || oscValue == scale1xIndex)
                 return;
 
-            if (mapping.TryGetValue(oscValue.Value, out float scaleFactor))
+            if (oscValue == 0)
+            {
+                float NextEyeHeight = 1f * DefaultEyeHeight;
+                StartScaling(NextEyeHeight);
+            }
+            else if (mapping.TryGetValue(oscValue.Value, out float scaleFactor))
             {
                 float NextEyeHeight = scaleFactor * DefaultEyeHeight;
                 StartScaling(NextEyeHeight);
