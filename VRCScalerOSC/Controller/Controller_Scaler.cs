@@ -12,7 +12,7 @@ namespace VRCScalerOSC.Controller
     {
         private readonly Service_VRCOSCQuery _serviceOSCQuery = new();
         private Service_VRCOSCProtocols? _serviceOSCProtocols;
-        private OscEventCollection _actionAfterGetOSCData;
+        private OscEventCollection _actionAfterGetOSCData = new();
         public event Service_VRCOSCProtocols.EventHandler? OSCDataSanded
         {
             add
