@@ -14,9 +14,9 @@ namespace VRCScalerOSC.Model
         public int SendTaskDelay = 5;
         public int SmoothScalingIterativeTimesPerSecond = 50;
         public float FormTargetEyeHeight = 10f;
-        public float FormScalingTime = 3f;
+        public float FormScalingTime = 0f;
         public float FormScalingRate = 2f;
-        public bool FormFixedRate = true;
+        public bool FormFixedRate = false;
         public bool FormAutoAbort = true;
         public float MaxHeight = 10000f;
         public float MinHeight = 0.01f;
